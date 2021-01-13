@@ -1,3 +1,4 @@
+import fs from 'fs';
 import log from 'book';
 import Koa from 'koa';
 import tldjs from 'tldjs';
