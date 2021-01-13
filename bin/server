@@ -39,6 +39,10 @@ const argv = optimist
         default: '',
         describe: 'SSL Private Key to use',
     })
+    .options('secret', {
+        default: '',
+        describe: 'Secret to use',
+    })
     .options('max-sockets', {
         default: 10,
         describe: 'maximum number of tcp sockets each client is allowed to establish at one time (the tunnels)'
@@ -55,7 +59,8 @@ const server = CreateServer({
     secure: argv.secure,
     domain: argv.domain,
     cert: argv.cert,
-    key: argv.key
+    key: argv.key,
+    secret: argv.secret
 });
 
 server.listen(argv.port, argv.address, () => {
