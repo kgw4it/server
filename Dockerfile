@@ -3,7 +3,7 @@ FROM node:12
 WORKDIR /app
 
 COPY package.json /app/
-COPY yarn.lock /app/
+#COPY yarn.lock /app/
 
 RUN yarn install --production && yarn cache clean
 
