@@ -20,6 +20,14 @@ export default function(opt) {
     function GetClientIdFromHostname(hostname) {
         return myTldjs.getSubdomain(hostname);
     }
+    
+    if (opt.cert && opt.key) {
+        opt.key = fs.readFileSync(opt.key);
+        opt.cert = fs.readFileSync(opt.cert);
+    } else {
+        opt.cert = '';
+        opt.key = '';
+    }
 
     const manager = new ClientManager(opt);
 
