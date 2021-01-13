@@ -128,6 +128,45 @@ export default function(opt) {
 
         const clientId = GetClientIdFromHostname(hostname);
         if (!clientId) {
+            if (opt.secret && req.url === '/?new') {
+                const auth = req.headers.authorization || '';
+                if (auth === '') {
+                    debug('Rejecting new tunnel without secret: secret required.');
+                    res.writeHead(401);
+                    res.write('No authorization\n');
+                    return;
+                }
+
+                const pieces = auth.split(' ');
+
+                if (pieces.length !== 2) {
+                    debug('Rejecting new tunnel without secret: invalid authentication header format.');
+                    res.writeHead(401);
+                    res.write('No authorization\n');
+                    return;
+                }
+
+                if (pieces[0] !== 'Basic') {
+                    debug('Rejecting new tunnel without secret: invalid authentication type.');
+                    res.writeHead(401);
+                    res.write('No authorization\n');
+                    return;
+                }
+
+                const authData = pieces[1];
+
+                const decoded = new Buffer.from(authData, 'base64').toString('ascii');
+
+                const authPieces = decoded.split(':');
+
+                if (authPieces[1] !== opt.secret) {
+                    debug('Rejecting new tunnel without secret: invalid authentication secret.');
+                    res.writeHead(401);
+                    res.write('No authorization\n');
+                    return;
+                }
+            }
+
             appCallback(req, res);
             return;
         }
